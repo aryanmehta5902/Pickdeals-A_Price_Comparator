@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Kaushan+Script&family=Raleway:wght@600&family=Red+Hat+Display:wght@500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Raleway', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            color: whitesmoke
+        }
+
+        .navbar {
+            background-color: #e6375e;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between
+        }
+
+        a {
+            float: left;
+            display: flex;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            position: relative;
+            width: fit-content;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px
+        }
+
+        .brand {
+            font-family: 'Bebas Neue', sans-serif;
+            color: white;
+            font-size: 30px;
+            height: fit-content;
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .linkbottom {
+            transition: 0.15s ease-in-out;
+            width: 0%;
+            height: 2px;
+            background-color: #e7a223;
+        }
+
+        a:hover+.linkbottom {
+            width: 100%
+        }
+
+
+        input[type="text"] {
+            border-radius: 5px;
+            padding: 10px;
+            outline: none;
+            border: 2px solid transparent;
+            transition: 0.15s ease-in-out;
+            margin: 10px;
+            color: whitesmoke;
+            background-color: rgb(27, 27, 27);
+            width: 300px
+        }
+
+        input[type="text"]:focus {
+            border-radius: 5px;
+            padding: 10px;
+            outline: none;
+            border: 2px solid blue;
+            color: whitesmoke;
+            background-color: rgb(27, 27, 27)
+        }
+
+        .username {
+            position: relative;
+            width: fit-content;
+            margin-right: 15px;
+            transition: 0.15s ease-in-out;
+        }
+
+        .info {
+            color: "white";
+            font-size: 32px;
+            font-family: "Roboto";
+            text-align: center;
+
+        }
+
+        h1 {
+            color: black;
+            font-size: 20px;
+            margin-top: 10px
+        }
+
+        .username:hover {
+
+            background-color: #e6395f;
+
+        }
+
+        .prodholder {
+            width: 100%;
+            height: fit-content;
+            background-color: whitesmoke;
+            border-radius: 10px;
+            margin-bottom: 10px
+        }
+
+        .prodholder:hover {
+            cursor: pointer;
+        }
+
+        .itemHolder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+            color: black
+                /* padding-left: 10px;
+            padding-right: 10px; */
+        }
+
+        .item {
+            width: 300px;
+            height: fit-content;
+            /* border-bottom: 4px solid #e7a223; */
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        img {
+            margin-left: 50px
+        }
+
+        #prodajname {
+            /* font-size: 25px; */
+            text-align: center;
+            font-size: 15px;
+        }
+
+        #prodajprice {
+            /* font-size: 22px; */
+            text-align: center;
+            font-size: 15px;
+        }
+
+        #prodnyname {
+            /* font-size: 22px; */
+            text-align: center;
+            font-size: 15px;
+        }
+
+        #prodnyprice {
+            /* font-size: 22px; */
+            text-align: center;
+            font-size: 15px;
+        }
+
+        #prodlfname {
+            /* font-size: 22px; */
+            text-align: center;
+            font-size: 15px;
+        }
+
+        #prodlfprice {
+            /* font-size: 22px; */
+            text-align: center;
+            font-size: 15px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="navbar">
+
+        <div class="brand">
+            <img src="{% static 'brand.jpeg' %}" height="100px" width="250px" alt="">
+        </div>
+        <div style="display:flex; align-items:center;
+        justify-content: center;">
+            <div>
+
+                <a href="#home">Home
+                    <div style="position:absolute; bottom:0;" class="linkbottom"></div>
+                </a>
+                <a href="{% url 'cart' %}">Cart
+                    <div style="position:absolute; bottom:0;" class="linkbottom"></div>
+                </a>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+
+                {{form.instr}}
+                <input type="submit" hidden>
+            </form>
+            <div class="username">
+                <a href="#contact">{{fname}}</a>
+            </div>
+        </div>
+    </div>
+
+    <div style="flex:1; display: flex; flex-direction: column;padding:20px; box-sizing: border-box;overflow: auto">
+
+        <div id="cachedProds" style="width:100%; height:fit-content; ">
+
+        </div>
+
+        {% if searched %}
+        <div class="prodholder" id="prodholder"
+            onclick="'updatecart({{searchTerm}},  Math.min({{productprice}}, Math.min(100, {{lifeprice}})))'">
+            <h1 style="color:black; margin-left:20px">Search Item - <span id="searchterm">{{searchterm}} </span> </h1>
+            <div class="itemHolder">
+                <div class="item">
+                    <img src={{productimg}} height="200px" width="200px" alt="" id="prodajimg">
+                    <div id="prodajname">
+
+                        {{productname}}
+                    </div>
+                    <div style='width: 100%; text-align:center; font-size:25px'>Price(₹)</div>
+                    <div id="prodajprice">
+
+                        {{productprice}}
+                    </div>
+                </div>
+                <div class="item">
+                    <img src={{nykimg}} height="200px" width="200px" alt="" id="prodnyimg">
+                    <div id="prodnyname">
+                        {{nykname}}
+                    </div>
+                    <div style='width: 100%; text-align:center; font-size:25px'>Price(₹)</div>
+                    <div id="prodnyprice">
+                        {{nykprice}}
+                    </div>
+                </div>
+                <div class="item">
+                    <img src={{lifeimg}} height="200px" width="200px" alt="" id="prodlfimg">
+                    <div id="prodlfname">
+                        {{lifename}}
+                    </div>
+                    <div style='width: 100%; text-align:center; font-size:25px'>Price(₹)</div>
+                    <div id="prodlfprice">
+                        {{lifeprice}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        {% endif %}
+
+    </div>
+    <script>
+        const prods = localStorage.getItem('products')
+        const jsonVal = JSON.parse(prods)
+        const par = document.getElementById('cachedProds')
+
+        function updatecart(name, value) {
+            console.error(name)
+            console.error(value)
+            const cart = localStorage.getItem('cart')
+            const jsonVal = JSON.parse(cart)
+
+            if (cart === undefined || cart === null) {
+                let temp = []
+                let prod = {
+                    name: name,
+                    value: value
+                }
+                temp.push(prod)
+                localStorage.setItem("cart", JSON.stringify(temp))
+            } else {
+                let prod = {
+                    name: name,
+                    value: value
+                }
+                jsonVal.push(prod)
+                localStorage.setItem("cart", JSON.stringify(jsonVal))
+            }
+        }
+
+        if (prods === null || prods === undefined) {
+            var div = document.createElement('div')
+            // document.getElementById('prodholder')?.style.display = 'none'
+            div.className = 'info'
+            div.innerHTML = "<h1>Nothing searched for now</h1>"
+            par.appendChild(div)
+            let temp = []
+
+            localStorage.setItem("products", JSON.stringify(temp))
+        }
+        else {
+            for (let i = 0; i < jsonVal?.length; i++) {
+                var div = document.createElement('div')
+                div.className = "prodholder"
+                div.innerHTML = "<h1 style='color:black; margin-left:20px'>Search Item - <span id='searchterm'>" + jsonVal[i].searchTerm + "</span> </h1><div class='itemHolder' onclick='updatecart(\"" + jsonVal[i].searchTerm + '\", ' + Math.min(jsonVal[i].ajprice, Math.min(150, jsonVal[i].lfprice)) + ")' ><div class='item'><img src='" + jsonVal[i].ajimg + "' height='200px' width='200px' alt='' id='prodajimg'><div id = 'prodajname'>" + jsonVal[i].ajname + "</div><div style='width: 100 %; text-align:center; font-size:25px'>Price(₹)</div><div id='prodajprice'> " + jsonVal[i].ajprice + "</div></div><div class='item'><img src='" + jsonVal[i].nykimg + "' height='200px' width='200px' id='prodnyimg'><div id='prodnyname'>" + jsonVal[i].nykname + "</div><div style='width: 100 %; text-align:center; font-size:25px'>Price(₹)</div><div id='prodnyprice'> " + jsonVal[i].nykprice + "</div></div><div class='item'><img src='" + jsonVal[i].lfimg + "' height='200px' width='200px' id='prodlfimg'><div id='prodlfname'>" + jsonVal[i].lfname + "</div><div style='width: 100 %; text-align:center; font-size:25px'>Price(₹)</div><div id='prodlfprice'> " + jsonVal[i].lfprice + "</div></div></div>"
+                par.appendChild(div)
+
+            }
+
+            let ajnames = document.querySelectorAll('#prodajname')
+            let ajimg = document.querySelectorAll("#prodajimg")
+            let ajprices = document.querySelectorAll("#prodajprice")
+            let nynames = document.querySelectorAll('#prodnyname')
+            let nykimg = document.querySelectorAll("#prodnyimg")
+            let nykprices = document.querySelectorAll("#prodnyprice")
+            let temp = []
+            let searchterms = document.querySelectorAll("#searchterm")
+            let lfnames = document.querySelectorAll("#prodlfname")
+            let lfprices = document.querySelectorAll("#prodlfprice")
+            let lfimg = document.querySelectorAll("#prodlfimg")
+            console.debug(ajnames.length)
+            console.error(ajimg)
+            console.error(ajprices)
+            console.error(nykimg)
+            console.error(nykprices)
+            console.error(nynames)
+            console.error(lfprices)
+            for (let i = 0; i < ajnames?.length; i++) {
+                let ajname = ajnames[i]?.innerText
+                ajname.trim()
+                let ajprice = ajprices[i]?.innerText
+                ajprice.trim()
+                let nykname = nynames[i]?.innerText
+                nykname.trim()
+                let nykprice = nykprices[i]?.innerText
+                nykprice.trim()
+                let lfname = lfnames[i]?.innerText
+                nykname.trim()
+                let lfprice = lfprices[i]?.innerText
+                nykprice.trim()
+
+                let prod = {
+                    ajimg: ajimg[i]?.src,
+                    ajname: ajname,
+                    ajprice: ajprice,
+                    nykimg: nykimg[i]?.src,
+                    nykname: nykname,
+                    nykprice: nykprice,
+                    searchTerm: searchterms[i].innerHTML,
+                    lfimg: lfimg[i].src,
+                    lfname: lfname,
+                    lfprice: lfprice
+                }
+                temp.push(prod)
+                console.warn(ajnames[i]?.innerHTML)
+                console.warn(ajimg[i]?.src)
+                console.warn(ajprices[i]?.innerHTML)
+                console.warn(nykimg[i]?.src)
+                console.warn(nynames[i]?.innerHTML)
+                console.warn(nykprices[i]?.innerHTML)
+            }
+            let stringVal = JSON.stringify(temp)
+            localStorage.setItem("products", stringVal)
+        }
+
+    </script>
+</body>
+
+</html>

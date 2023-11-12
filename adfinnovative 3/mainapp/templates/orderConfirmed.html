@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmed!</title>
+    <style>
+        body {
+            background-color: white;
+            color: #e6375e
+        }
+
+        h1 {
+            font-family: "Roboto";
+        }
+
+        h2 {
+            font-family: "Roboto";
+        }
+
+        a {
+            height: fit-content;
+            width: fit-content;
+            padding: 10px;
+            color: #000000;
+            background-color: #f0d6a3;
+            text-decoration: none;
+            border-radius: 10px
+        }
+    </style>
+</head>
+
+<body style="height: 100vh; width: 100vw;display: flex;align-items: center;justify-content: center; box-sizing:
+    border-box;overflow: hidden;display:flex;flex-direction: column;">
+
+    <h1>Congratulations!</h1>
+    <h2>The order has been placed successfully</h2>
+    <p><a href="{% url 'generate_pdf' %}" download>Download Order Details (PDF)</a></p>
+
+</body>
+
+</html>

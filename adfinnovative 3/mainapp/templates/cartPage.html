@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <style>
+        body {
+            font-family: 'Raleway', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            color: black
+        }
+
+        .navbar {
+            background-color: #e6375e;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between
+        }
+
+        a {
+            float: left;
+            display: flex;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            position: relative;
+            width: fit-content;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px
+        }
+
+        .brand {
+            font-family: 'Bebas Neue', sans-serif;
+            color: white;
+            font-size: 30px;
+            height: fit-content;
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .linkbottom {
+            transition: 0.15s ease-in-out;
+            width: 0%;
+            height: 2px;
+            background-color: #e7a223;
+        }
+
+        a:hover {
+            .linkbottom {
+                width: 100%
+            }
+        }
+
+        input[type="text"] {
+            border-radius: 5px;
+            padding: 10px;
+            outline: none;
+            border: 2px solid transparent;
+            transition: 0.15s ease-in-out;
+            margin: 10px;
+            color: whitesmoke;
+            background-color: rgb(27, 27, 27);
+            width: 300px
+        }
+
+        input[type="text"]:focus {
+            border-radius: 5px;
+            padding: 10px;
+            outline: none;
+            border: 2px solid blue;
+            color: whitesmoke;
+            background-color: rgb(27, 27, 27)
+        }
+
+        .username {
+            position: relative;
+            width: fit-content;
+            margin-right: 15px;
+            transition: 0.15s ease-in-out;
+        }
+
+        .info {
+            color: "white";
+            font-size: 32px;
+            font-family: "Roboto";
+            text-align: center;
+
+        }
+
+        h2 {
+            color: black;
+        }
+
+        h3 {
+            color: black;
+        }
+
+        .username:hover {
+
+            background-color: #e6395f;
+
+        }
+
+        .prodholder {
+            width: 100%;
+            height: fit-content;
+            background-color: rgb(27, 27, 27);
+            border-radius: 10px;
+            margin-bottom: 10px
+        }
+
+        .itemHolder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+            /* padding-left: 10px;
+            padding-right: 10px; */
+        }
+
+        .item {
+            width: 300px;
+            height: 300px;
+            border-bottom: 4px solid #e7a223;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        img {
+            margin-left: 50px
+        }
+
+        #prodajname {
+
+            font-size: 25px;
+            text-align: center;
+        }
+
+        #prodajprice {
+            font-size: 22px;
+            text-align: center;
+        }
+
+        #prodnyname {
+            font-size: 22px;
+            text-align: center;
+        }
+
+        #prodnyprice {
+            font-size: 22px;
+            text-align: center;
+        }
+
+        .yourItems {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            font-family: "Roboto";
+            align-items: center;
+            overflow-y: scroll;
+            /* border-bottom: 1px solid #e89229; */
+        }
+
+        .itemCard {
+            display: flex;
+            height: fit-content;
+            width: 100%;
+        }
+
+        button {
+            height: fit-content;
+            width: fit-content;
+            padding: 10px;
+            color: #000000;
+            background-color: #f0d6a3;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+
+        <div class="brand">
+            <img src="{% static 'brand.jpeg' %}" height="100px" width="250px" alt="">
+        </div>
+        <div style="display:flex; align-items:center;
+        justify-content: center;">
+            <div>
+
+                <a href="#home">Home
+                    <div style="position:absolute; bottom:0;" class="linkbottom"></div>
+                </a>
+                <a href="#cart">Cart
+                    <div style="position:absolute; bottom:0;" class="linkbottom"></div>
+                </a>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+
+                {{form.instr}}
+                <input type="submit" hidden>
+            </form>
+            <div class="username">
+                <a href="#contact">{{fname}}</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="yourItems">
+
+        <div class="itemsAdded"
+            style="height:fit-content; width:100%;display: flex;justify-content:center;display:flex;flex-direction: column;"
+            id="itemsAdded">
+
+
+        </div>
+
+        <div style="width: 50%;display: flex;justify-content:flex-end; padding:20px; font-size:32px; color:black"
+            id="price">
+
+        </div>
+        <form method='POST'>
+            {% csrf_token %}
+            <input type="text" hidden id="cartInput" name="cartinput">
+            <button type='submit' id='butt' onclick='send()'>Make Payment</button>
+        </form>
+
+    </div>
+
+    <script>
+        const cart = localStorage.getItem('cart')
+        const jsonVal = JSON.parse(cart)
+        const par = document.getElementById('itemsAdded')
+
+        function send() {
+            const formData = new FormData();
+            document.getElementById('cartInput').value = cart
+            formData.append(cart);
+        }
+
+
+        if (cart === null || cart === undefined) {
+            var div = document.createElement('div')
+            div.className = 'info'
+            div.innerHTML = "<h1>Nothing searched for now</h1>"
+            par.appendChild(div)
+            let temp = []
+            localStorage.setItem("cart", JSON.stringify(temp))
+        }
+        else {
+            let sum = 0
+            for (let i = 0; i < jsonVal?.length; i++) {
+                var div = document.createElement('div')
+                div.className = "itemCard"
+                div.innerHTML = '<div class="itemsAdded" style="height:fit-content; width:100%;display: flex;justify-content:center"><div style="border-bottom: 1px solid #e89229;width: 50%;height: fit-content;"><div class="itemCard"><div style="width:90%"><h2>' + jsonVal[i].name + '</h2></div><div style="width:10%"><h3>' + jsonVal[i].value + '</h3></div></div></div></div>'
+                par.appendChild(div)
+                sum += jsonVal[i].value
+            }
+            document.getElementById('price').innerHTML = "Total :" + sum
+            let ajnames = document.querySelectorAll('#prodajname')
+            let ajimg = document.querySelectorAll("#prodajimg")
+            let ajprices = document.querySelectorAll("#prodajprice")
+            let nynames = document.querySelectorAll('#prodnyname')
+            let nykimg = document.querySelectorAll("#prodnyimg")
+            let nykprices = document.querySelectorAll("#prodnyprice")
+            let temp = []
+            let searchterms = document.querySelectorAll("#searchterm")
+            console.debug(ajnames.length)
+            console.error(ajimg)
+            console.error(ajprices)
+            console.error(nykimg)
+            console.error(nykprices)
+            console.error(nynames)
+            for (let i = 0; i < ajnames?.length; i++) {
+                let ajname = ajnames[i]?.innerHTML.replace("\n", "")
+                ajname.trim()
+                let ajprice = ajprices[i]?.innerHTML.replace("\n", "")
+                ajprice.trim()
+                let nykname = nynames[i]?.innerHTML.replace("\n", "")
+                nykname.trim()
+                let nykprice = nykprices[i]?.innerHTML.replace("\n", "")
+                nykprice.trim()
+
+                let prod = {
+                    ajimg: ajimg[i]?.src,
+                    ajname: ajname,
+                    ajprice: ajprice,
+                    nykimg: nykimg[i]?.src,
+                    nykname: nykname,
+                    nykprice: nykprice,
+                    searchTerm: searchterms[i].innerHTML
+                }
+                temp.push(prod)
+                console.warn(ajnames[i]?.innerHTML)
+                console.warn(ajimg[i]?.src)
+                console.warn(ajprices[i]?.innerHTML)
+                console.warn(nykimg[i]?.src)
+                console.warn(nynames[i]?.innerHTML)
+                console.warn(nykprices[i]?.innerHTML)
+            }
+            let stringVal = JSON.stringify(temp)
+            localStorage.setItem("products", stringVal)
+            console.log(JSON.parse(localStorage.getItem("products")))
+        }
+    </script>
+</body>
+
+</html>

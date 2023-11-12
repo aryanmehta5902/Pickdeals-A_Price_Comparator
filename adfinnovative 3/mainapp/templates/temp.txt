@@ -1,0 +1,27 @@
+<div class="prodholder" id="prodholder">
+    <h1 style="color:white; margin-left:20px">Search Item - </h1>
+    <div class="itemHolder">
+        <div class="item">
+            <img src={{productimg}} height="200px" width="200px" alt="" id="prodajimg">
+            <div id="prodajname">
+
+                {{productname}}
+            </div>
+            <div id="prodajprice">
+
+                {{productprice}}
+            </div>
+            <a href={{link}}>Check</a>
+        </div>
+        <div class="item">
+            <img src={{nykimg}} height="200px" width="200px" alt="" id="prodnyimg">
+            <div id="prodnyname">
+                {{nykname}}
+            </div>
+            <div id="prodnyprice">
+                {{nykprice}}
+            </div>
+        </div>
+        <div class="item"></div>
+    </div>
+</div>
